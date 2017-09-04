@@ -76,3 +76,4 @@ EXPOSE 8080 8443 8778
 #s2i build <source> <image> [<tag>] [flags]
 # /opt/elevisor/j2ee/elevisor_jdk_Oracle_1.8.0_131.jar: No such file or directory
 #git://github.com/kranian/quickstart
+#https://github.com/kranian/elevisor-jboss-eap6-openshift
