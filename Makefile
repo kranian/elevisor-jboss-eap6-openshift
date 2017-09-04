@@ -1,5 +1,6 @@
 IMAGE_NAME = elevisor/jboss-eap6-openshift
 
+
 build:
 	docker build -t $(IMAGE_NAME) .
 

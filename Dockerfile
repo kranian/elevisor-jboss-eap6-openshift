@@ -19,7 +19,7 @@ ENV PRODUCT_VERSION 6.4.16.GA
 ENV JBOSS_HOME /opt/eap
 ENV JBOSS_IMAGE_RELEASE 37
 ENV STI_BUILDER jee
-ENV JBOSS_MODULES_SYSTEM_PKGS=org.jboss.logmanager,jdk.nashorn.api,com.elevisor.agent,com.elevizer,com.elevisor
+ENV JBOSS_MODULES_SYSTEM_PKGS_APPEND=com.elevisor.agent,com.elevizer,com.elevisor
 
 #-- ELEVISOR ENV VAR
 ENV ELEVISOR_J2EE_AGENT_HOME /opt/elevisor/j2ee
@@ -51,22 +51,28 @@ LABEL io.k8s.description="Platform for building and running Spring Boot applicat
 #JAVA_OPTS="${JAVA_OPTS} -Delevisor_home=/opt/j2ee -Delevisor_config=EFJ.conf"
 
 
-# Add configuration files, bashrc and other tweaks
-COPY ./s2i/bin/ $STI_SCRIPTS_PATH
-RUN mkdir -p /opt/elevisor
-COPY ./elevisor /opt
 
-RUN chmod -R 755 /opt/elevisor\
- && sed -i '$ a\'"JAVA_OPTS=\"\${JAVA_OPTS} -Xbootclasspath/p:\${JBOSS_MODULES_JAR}:\${JBOSS_LOGMANAGER_JAR}:\${JBOSS_LOGMANAGER_EXT_JAR} -Djava.util.logging.manager=org.jboss.logmanager.LogManager\"" /opt/eap/bin/standalone.conf \
- && sed -i '$ a\'"JAVA_OPTS=\"\${JAVA_OPTS} -Xbootclasspath/p:\${ELEVISOR_J2EE_AGENT_HOME}/elevisor_jdk_Oracle_1.8.0_131.jar\"" /opt/eap/bin/standalone.conf
- && sed -i '$ a\'"JAVA_OPTS=\"\${JAVA_OPTS} -javaagent:\${ELEVISOR_J2EE_AGENT_HOME}/elevisor_agent_jdk156.jar\"" /opt/eap/bin/standalone.conf
- && sed -i '$ a\'"JAVA_OPTS=\"\${JAVA_OPTS} -Delevisor_home=\${ELEVISOR_J2EE_AGENT_HOME} -Delevisor_config=EFJ.conf\"" /opt/eap/bin/standalone.conf
- && sed -i '$ a\'"JAVA_OPTS=\"\${JAVA_OPTS} -Dj2ee_agent_name=\${ELEVISOR_J2EE_AGENT_NAME} -Delevisor_server_ip=\${$ELEVISOR_IG_SERVER_IP} -Delevisor_common_port=\${ELEVISOR_J2EE_COMMON_PORT}"" /opt/eap/bin/standalone.conf
- && chown -R jboss:jboss /opt/elevisor \
+RUN mkdir -p /opt/elevisor/j2ee;mkdir -p /opt/elevisor/super
+
+COPY ./elevisor/j2ee /opt/elevisor/j2ee
+COPY ./elevisor/super /opt/elevisor/super
+COPY ./contrib/standalone.conf /opt/eap/bin
+
+
+RUN chmod -R 755 /opt/elevisor \
+    && sed -i '$ a\'"JAVA_OPTS=\"\${JAVA_OPTS} -Xbootclasspath/p:\${JBOSS_MODULES_JAR}:\${JBOSS_LOGMANAGER_JAR}:\${JBOSS_LOGMANAGER_EXT_JAR}:\${ELEVISOR_J2EE_AGENT_HOME}\/elevisor_jdk_Oracle_1.8.0_131.jar -Djava.util.logging.manager=org.jboss.logmanager.LogManager\"" /opt/eap/bin/standalone.conf \
+    && sed -i '$ a\'"JAVA_OPTS=\"\${JAVA_OPTS} -javaagent:\${ELEVISOR_J2EE_AGENT_HOME}/elevisor_agent_jdk156.jar\"" /opt/eap/bin/standalone.conf \
+    && sed -i '$ a\'"JAVA_OPTS=\"\${JAVA_OPTS} -Delevisor_home=\${ELEVISOR_J2EE_AGENT_HOME} -Delevisor_config=EFJ.conf\"" /opt/eap/bin/standalone.conf \
+    && sed -i '$ a\'"JAVA_OPTS=\"\${JAVA_OPTS} -Dj2ee_agent_name=\${ELEVISOR_J2EE_AGENT_NAME} -Delevisor_server_ip=\${ELEVISOR_IG_SERVER_IP} -Delevisor_common_port=\${ELEVISOR_J2EE_COMMON_PORT}\"" /opt/eap/bin/standalone.conf \
+    && chown -R jboss:jboss /opt/elevisor
+
+COPY ./s2i/bin /usr/local/s2i
 
 USER jboss
 EXPOSE 8080 8443 8778
 # Set the default CMD to print the usage of the language image
-CMD ["/opt/elevisor/super/start_sysmon.sh;/opt/eap/bin/openshift-launch.sh"]
+#CMD ["/opt/elevisor/super/start_sysmon.sh && /opt/eap/bin/openshift-launch.sh"]
 
 #s2i build <source> <image> [<tag>] [flags]
+# /opt/elevisor/j2ee/elevisor_jdk_Oracle_1.8.0_131.jar: No such file or directory
+#git://github.com/kranian/quickstart
