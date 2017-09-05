@@ -1,39 +1,40 @@
 apiVersion: v1
 kind: Template
 labels:
-  template: jboss-eap6-openshfit14-elevisor-s2i
+  template: jboss-eap6-elevisor-s2i
   xpaas: 1.2.0
 metadata:
   annotations:
-    description: Application template for Jboss using S2I.
+    description: Application template for JBOSS applications built with Elevisor using S2I.
     iconClass: icon-jboss
-    tags: jboss,jboss,java,jboss,xpaas
+    tags: tomcat,tomcat7,java,jboss,xpaas
     version: 1.2.0
-  name: jboss-eap6-openshfit14-elevisor-s2i
+  name: jboss-eap6-elevisor-s2i
 objects:
 - apiVersion: v1
   kind: ImageStream
   metadata:
     labels:
       application: ${APPLICATION_NAME}
-    name: elevisor/jboss-eap6-openshift
+    name: jboss-eap6-elevisor18-${APPLICATION_NAME}
   spec:
     tags:
     - annotations:
-      openshift.io/imported-from: elevisor/jboss-eap6-openshift:latest
+      openshift.io/imported-from: 192.168.0.153:5000/elevisor/jboss-eap6-opnshift-elevisor:latest
       from:
         kind: DockerImage
-        name: elevisor/jboss-eap6-openshift:latest
-      generation: 2
-      importPolicy: {}
+        name: 192.168.0.153:5000/elevisor/jboss-eap6-opnshift-elevisor
+      generation: 1
+      importPolicy:
+        insecure: true
       name: latest
       referencePolicy:
-        type: Source
+        type: Local
 - apiVersion: v1
   kind: Service
   metadata:
     annotations:
-      description: The web server's http port.
+      description: The JBOSS server's http port.
     labels:
       application: ${APPLICATION_NAME}
     name: ${APPLICATION_NAME}
@@ -84,7 +85,7 @@ objects:
         forcePull: true
         from:
           kind: ImageStreamTag
-          name: webserver30-tomcat7-openshift:latest
+          name: jboss-eap6-elevisor18-${APPLICATION_NAME}:latest
       type: Source
     triggers:
     - github:
@@ -117,22 +118,22 @@ objects:
       spec:
         containers:
         - env:
-          - name: JWS_ADMIN_USERNAME
-            value: ${JWS_ADMIN_USERNAME}
-          - name: JWS_ADMIN_PASSWORD
-            value: ${JWS_ADMIN_PASSWORD}
-          - name: SCOUTER_ENABLED
-            value: ${SCOUTER_ENABLED}
-          - name: NET_COLLECTOR_IP
-            value: ${NET_COLLECTOR_IP}
-          - name: NET_COLLECTOR_UDP_PORT
-            value: ${NET_COLLECTOR_UDP_PORT}
-          - name: NET_COLLECTOR_TCP_PORT
-            value: ${NET_COLLECTOR_TCP_PORT}
-          - name: OBJ_NAME
-            value: ${OBJ_NAME}
-          - name: HOOK_METHOD_PATTERNS
-            value: ${HOOK_METHOD_PATTERNS}
+          - name: ELEVISOR_IG_SERVER_IP
+            value: ${ELEVISOR_IG_SERVER_IP}
+          - name: ELEVISOR_J2EE_AGENT_NAME
+            value: ${ELEVISOR_J2EE_AGENT_NAME}
+          - name: ELEVISOR_J2EE_COMMON_PORT
+            value: ${ELEVISOR_J2EE_COMMON_PORT}
+          - name: ELEVISOR_J2EE_TRACE_PORT
+            value: ${ELEVISOR_J2EE_TRACE_PORT}
+          - name: ELEVISOR_J2EE_LICENSE
+            value: ${ELEVISOR_J2EE_LICENSE}
+          - name: ELEVISOR_SYSMON_AGENT_NAME
+            value: ${ELEVISOR_SYSMON_AGENT_NAME}
+          - name: ELEVISOR_SYSMON_COMMON_PORT
+            value: ${ELEVISOR_SYSMON_COMMON_PORT}
+          - name: ELEVISOR_SYSMON_LICENSE
+            value: ${ELEVISOR_SYSMON_LICENSE}
           image: ${APPLICATION_NAME}
           imagePullPolicy: Always
           name: ${APPLICATION_NAME}
@@ -140,16 +141,12 @@ objects:
           - containerPort: 8778
             name: jolokia
             protocol: TCP
+          - containerPort: 8443
+            name: ssl
+            protocol: TCP
           - containerPort: 8080
             name: http
             protocol: TCP
-          readinessProbe:
-            exec:
-              command:
-              - /bin/bash
-              - -c
-              - curl -s -u ${JWS_ADMIN_USERNAME}:${JWS_ADMIN_PASSWORD} 'http://localhost:8080/manager/jmxproxy/?get=Catalina%3Atype%3DServer&att=stateName'
-                |grep -iq 'stateName *= *STARTED'
         terminationGracePeriodSeconds: 60
     triggers:
     - imageChangeParams:
@@ -165,30 +162,29 @@ parameters:
 - description: The name for the application.
   name: APPLICATION_NAME
   required: true
-  value: jws-app
+  value: jboss-eap6-elevisor-app
 - description: 'Custom hostname for http service route.  Leave blank for default hostname,
     e.g.: <application-name>-<project>.<default-domain-suffix>'
   name: HOSTNAME_HTTP
 - description: Git source URI for application
   name: SOURCE_REPOSITORY_URL
   required: true
-  value: https://github.com/jboss-openshift/openshift-quickstarts.git
+  value: https://github.com/kranian/quickstart.git
 - description: Git branch/tag reference
   name: SOURCE_REPOSITORY_REF
-  value: "1.2"
+  value: "master"
 - description: Path within Git project to build; empty for root project directory.
   name: CONTEXT_DIR
-  value: tomcat-websocket-chat
-- description: JWS Admin User
-  from: '[a-zA-Z0-9]{8}'
-  generate: expression
-  name: JWS_ADMIN_USERNAME
-  required: true
-- description: JWS Admin Password
-  from: '[a-zA-Z0-9]{8}'
-  generate: expression
-  name: JWS_ADMIN_PASSWORD
-  required: true
+#- description: Git source URI for application
+#  name: SOURCE_REPOSITORY_URL
+#  required: true
+#  value: https://github.com/jboss-openshift/openshift-quickstarts.git
+#- description: Git branch/tag reference
+#  name: SOURCE_REPOSITORY_REF
+#  value: "1.2"
+#- description: Path within Git project to build; empty for root project directory.
+#  name: CONTEXT_DIR
+#  value: tomcat-websocket-chat
 - description: GitHub trigger secret
   from: '[a-zA-Z0-9]{8}'
   generate: expression
@@ -206,26 +202,43 @@ parameters:
   name: IMAGE_STREAM_NAMESPACE
   required: true
   value: openshift
-- description: Scouter Enabled
-  displayName: Scouter Enabled
-  name: SCOUTER_ENABLED
-  value: "True"
-- description: Scouter Server IP
-  displayName: Scouter Server IP
-  name: NET_COLLECTOR_IP
-  required: True
-- description: Scouter UDP Listen Port to be accssible from client
-  displayName: Scouter UDP Port
-  name: NET_COLLECTOR_UDP_PORT
-  value: "6101"
-- description: Scouter TCP Listen Port to be accssible from client
-  displayName: Scouter TCP Port
-  name: NET_COLLECTOR_TCP_PORT
-  value: "6100"
-- description: Scouter OBJ Name
-  displayName: Scouter Instance Name
-  name: OBJ_NAME
-- description: Scouter Hook Method Pattern
-  displayName: Scouter Hook Method Pattern
-  name: HOOK_METHOD_PATTERNS
-  value: 'org.mybatis.jpetstore.*.*'
+- description: Elevisor Server IP
+  displayName: Elevisor Server IP
+  name: ELEVISOR_IG_SERVER_IP
+  value : "192.168.0.152"
+  required: true
+- description: ELEVISOR_J2EE_AGENT_NAME
+  displayName: ELEVISOR_J2EE_AGENT_NAME
+  name : ELEVISOR_J2EE_AGENT_NAME
+  from: '[A-Z0-9]{4}'
+  generate: expression
+  required: true
+- description: ELEVISOR_J2EE_COMMON_PORT
+  displayName: ELEVISOR_J2EE_COMMON_PORT
+  name: ELEVISOR_J2EE_COMMON_PORT
+  value : "7711"
+  required: true
+- description: ELEVISOR_J2EE_TRACE_PORT
+  displayName: ELEVISOR_J2EE_TRACE_PORT
+  name: ELEVISOR_J2EE_TRACE_PORT
+  value : "7712"
+  required: true
+- description: ELEVISOR_J2EE_LICENSE
+  displayName: ELEVISOR_J2EE_LICENSE
+  name : ELEVISOR_J2EE_LICENSE
+  value : "ELRS-ECNJ-E93K-EGYU-ECNJ-E93K-D4UEHR9JC"
+- description: ELEVISOR_SYSMON_AGENT_NAME
+  displayName: ELEVISOR_SYSMON_AGENT_NAME
+  name : ELEVISOR_SYSMON_AGENT_NAME
+  from: '[A-Z0-9]{4}'
+  generate: expression
+  required: true
+- description: ELEVISOR_SYSMON_COMMON_PORT
+  displayName: ELEVISOR_SYSMON_COMMON_PORT
+  name: ELEVISOR_SYSMON_COMMON_PORT
+  value : "7771"
+  required: true
+- description: ELEVISOR_SYSMON_LICENSE
+  displayName: ELEVISOR_SYSMON_LICENSE
+  name : ELEVISOR_SYSMON_LICENSE
+  value : "E9K2-EU6B-ELHA-EGYR-EU63-ELHA-D4UEHRLQF"
