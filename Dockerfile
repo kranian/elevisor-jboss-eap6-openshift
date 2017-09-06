@@ -19,7 +19,7 @@ ENV PRODUCT_VERSION 6.4.16.GA
 ENV JBOSS_HOME /opt/eap
 ENV JBOSS_IMAGE_RELEASE 37
 ENV STI_BUILDER jee
-ENV JBOSS_MODULES_SYSTEM_PKGS_APPEND=com.elevisor.agent,com.elevizer,com.elevisor
+ENV JBOSS_MODULES_SYSTEM_PKGS_APPEND=com.elevisor,com.elevisor.agent,com.elevizer.agent
 
 #-- ELEVISOR ENV VAR
 ENV ELEVISOR_AGENT_HOME /opt/elevisor
@@ -90,3 +90,6 @@ CMD ["/usr/local/s2i/run"]
 #sudo docker push 192.168.0.153:5000/elevisor/jboss-eap6-opnshift-elevisor
 
 #  error: build error: image "172.30.1.1:5000/kranian/custom-jboss-elevisor@sha256:1a4c5d4ed446365de1551657aaa53f77704f000bce7eba75334d640339b4768a" must specify a user that is numeric and within the range of allowed users ==> 도커 파일 사용자를 문자열 사용자로 만들었기 때문에 해당 문제가 발생함
+
+
+#https://blog.openshift.com/getting-any-docker-image-running-in-your-own-openshift-cluster/
