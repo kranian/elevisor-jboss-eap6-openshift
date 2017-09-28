@@ -2,13 +2,13 @@ apiVersion: v1
 kind: Template
 labels:
   template: jboss-eap6-elevisor-s2i
-  xpaas: 1.2.0
+  xpaas: 1.0.0
 metadata:
   annotations:
     description: Application template for JBOSS applications built with Elevisor using S2I.
     iconClass: icon-jboss
     tags: eap,javaee,java,jboss,xpaas
-    version: 1.4.0
+    version: 1.0.0
     openshift.io/display-name: Red Hat JBoss EAP 6.4 (Elevisor)
   name: jboss-eap6-elevisor-s2i
 objects:
@@ -17,14 +17,14 @@ objects:
   metadata:
     labels:
       application: ${APPLICATION_NAME}
-    name: jboss-eap6-elevisor18-${APPLICATION_NAME}
+    name: jboss-eap6-elevisor-${APPLICATION_NAME}
   spec:
     tags:
     - annotations:
-      openshift.io/imported-from: 192.168.0.153:5000/elevisor/jboss-eap6-opnshift-elevisor:latest
+      openshift.io/imported-from: 192.168.0.153:5000/elevisor/jboss-eap6-openshift-elevisor:latest
       from:
         kind: DockerImage
-        name: 192.168.0.153:5000/elevisor/jboss-eap6-opnshift-elevisor
+        name: 192.168.0.153:5000/elevisor/jboss-eap6-openshift-elevisor
       generation: 1
       importPolicy:
         insecure: true
@@ -86,7 +86,7 @@ objects:
         forcePull: true
         from:
           kind: ImageStreamTag
-          name: jboss-eap6-elevisor18-${APPLICATION_NAME}:latest
+          name: jboss-eap6-elevisor-${APPLICATION_NAME}:latest
       type: Source
     triggers:
     - github:
@@ -176,7 +176,7 @@ parameters:
 - description: The name for the application.
   name: APPLICATION_NAME
   required: true
-  value: jboss-eap6-elevisor-app
+  value: elevisor-app
 - displayName: Service Account Name
   description: The name of the service account to use for the deployment.
   name: SERVICE_ACCOUNT_NAME

@@ -19,7 +19,7 @@ ENV PRODUCT_VERSION 6.4.16.GA
 ENV JBOSS_HOME /opt/eap
 ENV JBOSS_IMAGE_RELEASE 37
 ENV STI_BUILDER jee
-ENV JBOSS_MODULES_SYSTEM_PKGS_APPEND=com.elevisor,com.elevisor.agent,com.elevizer.agent
+ENV JBOSS_MODULES_SYSTEM_PKGS_APPEND=com.elevisor,com.elevizer.j2ee,com.elevisor.j2ee.agent,com.elevizer.j2ee.agent
 
 #-- ELEVISOR ENV VAR
 ENV ELEVISOR_AGENT_HOME /opt/elevisor
@@ -54,6 +54,9 @@ LABEL io.k8s.description="Platform for building and running Spring Boot applicat
 #JAVA_OPTS="${JAVA_OPTS}  -javaagent:/opt/j2ee/elevisor_javaagent.jar"
 #JAVA_OPTS="${JAVA_OPTS} -Delevisor_home=/opt/j2ee -Delevisor_config=EFJ.conf"
 
+#export MAVEN_OPTS=
+#mvn -f pom.xml clean package tomcat7:run 2>&1 &
+#export MAVEN_OPTS=" -Xbootclasspath/p:/home/projects/elevisor/agent/elevisor_jdk_Oracle_1.8.0_131.jar -javaagent:/home/projects/elevisor/agent/elevisor_agent_jdk156.jar -Delevisor_home=/home/projects/elevisor/agent -Delevisor_config=ST21.conf"
 
 USER 0
 RUN mkdir -p /opt/elevisor/j2ee
@@ -73,11 +76,7 @@ RUN sed -i '$ a\'"JAVA_OPTS=\"\${JAVA_OPTS} -Xbootclasspath/p:\${JBOSS_MODULES_J
 USER 185
 EXPOSE 8080 8443 8778
 CMD ["/usr/local/s2i/run"]
-# Set the default CMD to print the usage of the language image
-#CMD ["/opt/elevisor/super/start_sysmon.sh && /opt/eap/bin/openshift-launch.sh"]
 
-#s2i build <source> <image> [<tag>] [flags]
-# /opt/elevisor/j2ee/elevisor_jdk_Oracle_1.8.0_131.jar: No such file or directory
 #git://github.com/kranian/quickstart
 #https://github.com/kranian/elevisor-jboss-eap6-openshift
 #oc adm policy add-cluster-role-to-user cluster-admin developer
