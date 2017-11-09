@@ -10,9 +10,8 @@ metadata:
     tags: eap,javaee,java,jboss,xpaas
     version: 1.0.0
     openshift.io/display-name: Red Hat JBoss EAP 6.4 (Elevisor)
-  name: jboss-eap6-elevisor
+  name: jboss-eap6-elevisor-s2i
 objects:
-
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -22,22 +21,16 @@ objects:
   spec:
     tags:
     - annotations:
-#      openshift.io/imported-from: 192.168.0.153:5000/elevisor/jboss-eap6-openshift-elevisor:latest
+      openshift.io/imported-from: 192.168.0.153:5000/elevisor/jboss-eap6-openshift-elevisor:latest
       from:
         kind: DockerImage
-        name: registry.access.redhat.com/jboss-eap-6/eap64-openshift
+        name: 192.168.0.153:5000/elevisor/jboss-eap6-openshift-elevisor
       generation: 1
       importPolicy:
         insecure: true
       name: latest
       referencePolicy:
         type: Local
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    labels:
-      application: ${APPLICATION_NAME}
-    name: ${APPLICATION_NAME}
 - apiVersion: v1
   kind: Service
   metadata:
@@ -65,7 +58,12 @@ objects:
     host: ${HOSTNAME_HTTP}
     to:
       name: ${APPLICATION_NAME}
-
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    labels:
+      application: ${APPLICATION_NAME}
+    name: ${APPLICATION_NAME}
 - apiVersion: v1
   kind: BuildConfig
   metadata:
@@ -84,11 +82,12 @@ objects:
         uri: ${SOURCE_REPOSITORY_URL}
       type: Git
     strategy:
-      type: Docker
-      dockerStrategy:
+      sourceStrategy:
+        forcePull: true
         from:
           kind: ImageStreamTag
           name: jboss-eap6-elevisor-${APPLICATION_NAME}:latest
+      type: Source
     triggers:
     - github:
         secret: ${GITHUB_WEBHOOK_SECRET}
@@ -189,7 +188,7 @@ parameters:
 - description: Git source URI for application
   name: SOURCE_REPOSITORY_URL
   required: true
-  value: http://elevisor.iptime.org:9937/yeosong.heo/docker-demo.git
+  value: https://github.com/kranian/quickstart.git
 - description: Git branch/tag reference
   name: SOURCE_REPOSITORY_REF
   value: "master"
