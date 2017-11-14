@@ -227,11 +227,10 @@ parameters:
   name: ELEVISOR_IG_SERVER_IP
   value : "192.168.0.152"
   required: true
-- description: ELEVISOR_J2EE_AGENT_NAME
-  displayName: ELEVISOR_J2EE_AGENT_NAME
-  name : ELEVISOR_J2EE_AGENT_NAME
-  from: '[A-Z0-9]{4}'
-  generate: expression
+- description: Elevisor Monitoring Project Name
+  displayName: Elevisor Monitoring Project Name
+  name: ELEVISOR_GROUP_NAME
+  value : "MOV"
   required: true
 - description: ELEVISOR_J2EE_COMMON_PORT
   displayName: ELEVISOR_J2EE_COMMON_PORT
@@ -246,13 +245,8 @@ parameters:
 - description: ELEVISOR_J2EE_LICENSE
   displayName: ELEVISOR_J2EE_LICENSE
   name : ELEVISOR_J2EE_LICENSE
-  value : "ELRS-ECNJ-E93K-EGYU-ECNJ-E93K-D4UEHR9JC"
-- description: ELEVISOR_SYSMON_AGENT_NAME
-  displayName: ELEVISOR_SYSMON_AGENT_NAME
-  name : ELEVISOR_SYSMON_AGENT_NAME
-  from: '[A-Z0-9]{4}'
-  generate: expression
-  required: true
+  value : "E4B3-ERZA-ERBK-EGD4-ERZA-ERBK-D4UEHRRZC"
+
 - description: ELEVISOR_SYSMON_COMMON_PORT
   displayName: ELEVISOR_SYSMON_COMMON_PORT
   name: ELEVISOR_SYSMON_COMMON_PORT
@@ -261,7 +255,7 @@ parameters:
 - description: ELEVISOR_SYSMON_LICENSE
   displayName: ELEVISOR_SYSMON_LICENSE
   name : ELEVISOR_SYSMON_LICENSE
-  value : "E9K2-EU6B-ELHA-EGYR-EU63-ELHA-D4UEHRLQF"
+  value : "TNG4-TF5E-TFGX-EGD9-TF5P-TFGX-D4UEHKF55"
 - displayName: Deploy Exploded Archives
   description: Controls whether exploded deployment content should be automatically deployed
   name: AUTO_DEPLOY_EXPLODED
