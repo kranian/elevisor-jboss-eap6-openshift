@@ -137,6 +137,8 @@ objects:
             value: ${ELEVISOR_SYSMON_COMMON_PORT}
           - name: ELEVISOR_SYSMON_LICENSE
             value: ${ELEVISOR_SYSMON_LICENSE}
+          - name : ELEVISOR_GROUP_NAME
+            value: ${ELEVISOR_GROUP_NAME}
           image: ${APPLICATION_NAME}
           imagePullPolicy: Always
           name: ${APPLICATION_NAME}
