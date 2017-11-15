@@ -1,4 +1,0 @@
-#!/bin/bash
-bash $ELEVISOR_AGENT_HOME/update_config_agent.sh &
-bash $ELEVISOR_SYSMON_AGENT_HOME/bin/start_sysmon.sh &
-exec $JBOSS_HOME/bin/openshift-launch.sh

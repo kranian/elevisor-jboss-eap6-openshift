@@ -225,12 +225,12 @@ parameters:
 - description: Elevisor Server IP
   displayName: Elevisor Server IP
   name: ELEVISOR_IG_SERVER_IP
-  value : "192.168.0.152"
+  value : "192.168.0.79"
   required: true
 - description: Elevisor Monitoring Project Name
   displayName: Elevisor Monitoring Project Name
   name: ELEVISOR_GROUP_NAME
-  value : "MOV"
+  value : "SafeKorea"
   required: true
 - description: ELEVISOR_J2EE_COMMON_PORT
   displayName: ELEVISOR_J2EE_COMMON_PORT
