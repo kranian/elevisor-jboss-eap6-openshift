@@ -139,6 +139,8 @@ objects:
             value: ${ELEVISOR_SYSMON_LICENSE}
           - name : ELEVISOR_GROUP_NAME
             value: ${ELEVISOR_GROUP_NAME}
+          - name : ELEVISOR_PUSH_INTERVAL
+            value: ${ELEVISOR_PUSH_INTERVAL}
           image: ${APPLICATION_NAME}
           imagePullPolicy: Always
           name: ${APPLICATION_NAME}
@@ -233,6 +235,11 @@ parameters:
   displayName: Elevisor Monitoring Project Name
   name: ELEVISOR_GROUP_NAME
   value : "SafeKorea"
+  required: true
+- description: Elevisor Agent Push Period Time Unit/Sec
+  displayName: Elevisor Agent Push Period Time Unit/Sec
+  name: ELEVISOR_PUSH_INTERVAL
+  value : "1"
   required: true
 - description: ELEVISOR_J2EE_COMMON_PORT
   displayName: ELEVISOR_J2EE_COMMON_PORT
