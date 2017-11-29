@@ -245,21 +245,21 @@ parameters:
 - description: Elevisor Server IP
   displayName: Elevisor Server IP
   name: ELEVISOR_IG_SERVER_IP
-  value : "192.168.0.79"
+  value : "192.168.0.153"
   required: true
 - description: Elevisor Monitoring Project Name
   displayName: Elevisor Monitoring Project Name
   name: ELEVISOR_GROUP_NAME
-  value : "SafeKorea"
+  value : "ONRANA"
   required: true
 - description: Elevisor J2EE Agent Push Period Time Unit/Sec
   displayName: Elevisor J2EE Agent Push Period Time Unit/Sec
   name: ELEVISOR_J2EE_PUSH_INTERVAL
-  value : "1"
+  value : "2"
 - description: Elevisor SYSMON Agent Push Period Time Unit/Sec
   displayName: Elevisor SYSMON Agent Push Period Time Unit/Sec
   name: ELEVISOR_SYSMON_PUSH_INTERVAL
-  value : "2"
+  value : "3"
   required: true
 - description: ELEVISOR_J2EE_COMMON_PORT
   displayName: ELEVISOR_J2EE_COMMON_PORT
