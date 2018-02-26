@@ -29,7 +29,7 @@ objects:
       generation: 1
       importPolicy:
         insecure: true
-      name: latest
+      name: 1.6-7
       referencePolicy:
         type: Local
 - apiVersion: v1
@@ -99,20 +99,20 @@ objects:
     - imageChange: {}
       type: ImageChange
     - type: ConfigChange
-#- apiVersion: extensions/v1beta1
-#  kind: HorizontalPodAutoscaler
-#  metadata:
-#    name: ${APPLICATION_NAME}
-#  spec:
-#    scaleRef:
-#      kind: DeploymentConfig
-#      name: ${APPLICATION_NAME}
-#    apiVersion: v1
-#    subresource: scale
-#    minReplicas: 2
-#    maxReplicas: 7
-#    cpuUtilization:
-#      targetPercentage: 50
+- apiVersion: extensions/v1beta1
+  kind: HorizontalPodAutoscaler
+  metadata:
+    name: ${APPLICATION_NAME}
+  spec:
+    scaleRef:
+      kind: DeploymentConfig
+      name: ${APPLICATION_NAME}
+    apiVersion: v1
+    subresource: scale
+    minReplicas: 2
+    maxReplicas: 7
+    cpuUtilization:
+      targetPercentage: 50
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
