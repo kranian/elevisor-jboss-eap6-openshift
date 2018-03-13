@@ -25,7 +25,7 @@ objects:
 #      openshift.io/imported-from: 192.168.0.153:5000/elevisor/jboss-eap6-openshift-elevisor:latest
       from:
         kind: DockerImage
-        name: registry.access.redhat.com/jboss-eap-6/eap64-openshift
+        name: registry.access.redhat.com/jboss-eap-6/eap64-openshift:1.5-18
       generation: 1
       importPolicy:
         insecure: true
