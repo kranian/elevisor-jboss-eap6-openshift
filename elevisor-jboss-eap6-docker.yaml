@@ -13,25 +13,25 @@ metadata:
   name: jboss-eap6-elevisor
 objects:
 
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    labels:
-      application: ${APPLICATION_NAME}
-    name: jboss-eap6-elevisor-${APPLICATION_NAME}
-  spec:
-    tags:
-    - annotations:
-#      openshift.io/imported-from: 192.168.0.153:5000/elevisor/jboss-eap6-openshift-elevisor:latest
-      from:
-        kind: DockerImage
-        name: registry.access.redhat.com/jboss-eap-6/eap64-openshift:1.4-37
-      generation: 1
-      importPolicy:
-        insecure: true
-      name: 1.6-7
-      referencePolicy:
-        type: Local
+#- apiVersion: v1
+#  kind: ImageStream
+#  metadata:
+#    labels:
+#      application: ${APPLICATION_NAME}
+#    name: jboss-eap6-elevisor-${APPLICATION_NAME}
+#  spec:
+#    tags:
+#    - annotations:
+##      openshift.io/imported-from: 192.168.0.153:5000/elevisor/jboss-eap6-openshift-elevisor:latest
+#      from:
+#        kind: DockerImage
+#        name: registry.access.redhat.com/jboss-eap-6/eap64-openshift:1.4-37
+#      generation: 1
+#      importPolicy:
+#        insecure: true
+#      name: 1.6-7
+#      referencePolicy:
+#        type: Local
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -88,7 +88,7 @@ objects:
       dockerStrategy:
         from:
           kind: ImageStreamTag
-          name: jboss-eap6-elevisor-${APPLICATION_NAME}:latest
+          name: registry.access.redhat.com/jboss-eap-6/eap64-openshift:1.4-37
     triggers:
     - github:
         secret: ${GITHUB_WEBHOOK_SECRET}
@@ -245,17 +245,17 @@ parameters:
 - description: Elevisor Server IP
   displayName: Elevisor Server IP
   name: ELEVISOR_IG_SERVER_IP
-  value : "192.168.0.153"
+  value : "192.168.0.154"
   required: true
 - description: Elevisor Monitoring Project Name
   displayName: Elevisor Monitoring Project Name
   name: ELEVISOR_GROUP_NAME
-  value : "ONRANA"
+  value : "SAFE"
   required: true
 - description: Elevisor J2EE Agent Push Period Time Unit/Sec
   displayName: Elevisor J2EE Agent Push Period Time Unit/Sec
   name: ELEVISOR_J2EE_PUSH_INTERVAL
-  value : "2"
+  value : "3"
 - description: Elevisor SYSMON Agent Push Period Time Unit/Sec
   displayName: Elevisor SYSMON Agent Push Period Time Unit/Sec
   name: ELEVISOR_SYSMON_PUSH_INTERVAL
@@ -274,7 +274,7 @@ parameters:
 - description: ELEVISOR_J2EE_LICENSE
   displayName: ELEVISOR_J2EE_LICENSE
   name : ELEVISOR_J2EE_LICENSE
-  value : "E4B3-ERZA-ERBK-EGD4-ERZA-ERBK-D4UEHRRZC"
+  value : "TRE9-T4ZW-T4MN-EGZD-T4ZW-T4MN-D4UTMK4V2"
 
 - description: ELEVISOR_SYSMON_COMMON_PORT
   displayName: ELEVISOR_SYSMON_COMMON_PORT
@@ -284,7 +284,7 @@ parameters:
 - description: ELEVISOR_SYSMON_LICENSE
   displayName: ELEVISOR_SYSMON_LICENSE
   name : ELEVISOR_SYSMON_LICENSE
-  value : "TNG4-TF5E-TFGX-EGD9-TF5P-TFGX-D4UEHKF55"
+  value : "EKJC-ESP2-ES56-EGZX-ESPF-ES56-D4UTMRSGW"
 - displayName: Deploy Exploded Archives
   description: Controls whether exploded deployment content should be automatically deployed
   name: AUTO_DEPLOY_EXPLODED
